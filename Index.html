@@ -3,47 +3,79 @@
 <head>
     <title>Loading Site Preferences...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Basic styling for the bridge page */
+        /* Global Styles & Font */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif; /* Applied Roboto font */
             flex-direction: column;
             text-align: center;
-            background-color: #f0f0f0; /* Light gray background */
+            background-color: #f0f0f0; /* Light gray background for contrast */
+            color: #333;
         }
+        
+        /* Container and Text Styles */
         #prompt-container {
-            display: none; /* Hidden by default, shown when preference is needed */
-            padding: 20px;
+            display: none;
+            padding: 30px 40px;
             border: 1px solid #ccc;
             border-radius: 8px;
             background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            max-width: 400px;
         }
+        h1 {
+            font-weight: 700;
+        }
+        #loading-message {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+        
+        /* Black and White Button Theme */
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             margin: 10px;
             font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
-            border: none;
+            
+            /* Black background, White text, White outline (border) */
+            background-color: #000; 
+            color: #fff;
+            border: 2px solid #fff; /* White outline (not visible on white background) */
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, opacity 0.3s, border-color 0.3s;
         }
-        button:nth-child(2) { /* New Homepage button */
-            background-color: #4CAF50; /* Green */
-            color: white;
-        }
-        button:nth-child(3) { /* Old Homepage button */
-            background-color: #008CBA; /* Blue */
-            color: white;
-        }
+        
         button:hover {
-            opacity: 0.8;
+            opacity: 0.9;
+            background-color: #333; /* Slightly lighter black on hover */
+            border-color: #000; /* Subtle change on hover */
         }
+
+        /* Specific styles for the buttons to ensure the white border is visible */
+        .button-group {
+            border: 1px solid #000; /* Border around the entire group */
+            display: flex;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 5px;
+            background-color: #fff; /* White background for the group */
+        }
+        .button-group button {
+            background-color: #000; 
+            color: #fff;
+            border: 1px solid #fff; /* White border for contrast against black button fill */
+        }
+
     </style>
 </head>
 <body>
@@ -55,26 +87,23 @@
     <div id="prompt-container">
         <h1>Welcome! Which site version do you prefer?</h1>
         <p>We'll remember your choice for next time.</p>
-        <button onclick="setPreferenceAndRedirect('new')">Go to New Homepage</button>
-        <button onclick="setPreferenceAndRedirect('old')">Go to Old Homepage</button>
+        <div class="button-group">
+            <button onclick="setPreferenceAndRedirect('new')">Go to New Homepage</button>
+            <button onclick="setPreferenceAndRedirect('old')">Go to Old Homepage</button>
+        </div>
     </div>
 
     <script>
         // --- CONFIGURATION: REPLACE THESE URLs ---
-        const NEW_HOME_URL = 'https://sites.google.com/kaneland.org/142/kaneland-application-launcher?authuser=1'; // <-- REPLACE THIS WITH YOUR NEW HOME URL
-        const OLD_HOME_URL = 'https://sites.google.com/kaneland.org/kanelandapplicationlauncher/?authuser=1'; // <-- REPLACE THIS WITH YOUR OLD HOME URL
+        const NEW_HOME_URL = 'https://sites.google.com/view/yoursite/new-home'; // <-- REPLACE THIS WITH YOUR NEW HOME URL
+        const OLD_HOME_URL = 'https://sites.google.com/view/yoursite/old-home'; // <-- REPLACE THIS WITH YOUR OLD HOME URL
         // -----------------------------------------
         
         const PREF_KEY = 'site_homepage_preference';
 
         function setPreferenceAndRedirect(preference) {
-            // 1. Save the preference to local storage
             localStorage.setItem(PREF_KEY, preference);
-
-            // 2. Determine the correct URL
             const targetUrl = (preference === 'new') ? NEW_HOME_URL : OLD_HOME_URL;
-
-            // 3. Redirect the main browser window (this is the key step)
             window.top.location.replace(targetUrl);
         }
 
@@ -82,17 +111,14 @@
             const preference = localStorage.getItem(PREF_KEY);
 
             if (preference) {
-                // Preference exists, redirect immediately
                 document.getElementById('loading-message').textContent = `Redirecting to the ${preference} homepage...`;
                 setPreferenceAndRedirect(preference);
             } else {
-                // No preference, show the prompt to the user
                 document.getElementById('loading-message').style.display = 'none';
-                document.getElementById('prompt-container').style.display = 'flex'; // Use flex to center buttons
+                document.getElementById('prompt-container').style.display = 'block'; 
             }
         }
 
-        // Run the preference check logic as soon as the script loads
         checkPreference();
     </script>
 </body>
