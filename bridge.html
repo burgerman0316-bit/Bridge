@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loading...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Optional: Basic styling for the loading state */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+            text-align: center;
+        }
+        #prompt-container {
+            display: none; /* Hide until needed */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-message">
+        Checking your preferences...
+    </div>
+
+    <div id="prompt-container">
+        <h1>Welcome! Which site version do you prefer?</h1>
+        <p>We'll remember your choice for next time.</p>
+        <button onclick="setPreferenceAndRedirect('new')">Go to New Homepage</button>
+        <button onclick="setPreferenceAndRedirect('old')">Go to Old Homepage</button>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const NEW_HOME_URL = 'https://sites.google.com/kaneland.org/142/kaneland-application-launcher?authuser=1'; // <-- REPLACE THIS
+        const OLD_HOME_URL = 'https://sites.google.com/kaneland.org/kanelandapplicationlauncher/?authuser=1'; // <-- REPLACE THIS
+        const PREF_KEY = 'site_homepage_preference';
+        // ---------------------
+
+        function setPreferenceAndRedirect(preference) {
+            // Save the preference to local storage
+            localStorage.setItem(PREF_KEY, preference);
+
+            // Redirect the main browser window
+            if (preference === 'new') {
+                window.top.location.replace(NEW_HOME_URL);
+            } else {
+                window.top.location.replace(OLD_HOME_URL);
+            }
+        }
+
+        function checkPreference() {
+            const preference = localStorage.getItem(PREF_KEY);
+
+            if (preference) {
+                // Preference exists, redirect immediately
+                document.getElementById('loading-message').textContent = `Redirecting to the ${preference} homepage...`;
+                setPreferenceAndRedirect(preference);
+            } else {
+                // No preference, show the prompt
+                document.getElementById('loading-message').style.display = 'none';
+                document.getElementById('prompt-container').style.display = 'block';
+            }
+        }
+
+        // Run the check when the page loads
+        checkPreference();
+    </script>
+</body>
+</html>
